@@ -3,7 +3,7 @@ name: Backend Build and Push
 on:
   push:
     paths:
-      - './Dockerfile-nginx'
+      - 'Dockerfile-nginx'
 
 jobs:
   build-and-push:
