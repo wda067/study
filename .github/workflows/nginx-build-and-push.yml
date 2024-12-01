@@ -3,6 +3,7 @@ name: Nginx Build and Push
 on:
   push:
     paths:
+      - 'nginx.conf'
       - 'Dockerfile-nginx'
 
 jobs:
