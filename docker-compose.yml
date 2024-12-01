@@ -1,7 +1,8 @@
 services:
   db:
+    image: ${DOCKERHUB_USERNAME}/study-mysql
+    pull_policy: always
     container_name: mysql-db
-    image: mysql:8.0
     ports:
       - "3306:3306"
     environment:
@@ -11,6 +12,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
+    restart: always
 
   backend:
     image: ${DOCKERHUB_USERNAME}/study-backend
@@ -29,6 +31,7 @@ services:
       - "80:80"
     depends_on:
       - backend
+    restart: always
 
 volumes:
   db_data:
