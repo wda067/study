@@ -36,7 +36,6 @@ jobs:
           host: ${{ secrets.AWS_EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
-          port: 22
           script: |
             export MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
             export MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
