@@ -22,7 +22,7 @@ jobs:
           # GitHub Secret에서 Docker Hub 액세스 토큰을 가져옵니다.
 
       - name: Copy docker-compose.yml to EC2
-        uses: appleboy/scp-action@v0.1.3
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.AWS_EC2_HOST }}
           username: ec2-user
@@ -31,7 +31,7 @@ jobs:
           target: /home/ec2-user/
 
       - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@v0.1.3
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.AWS_EC2_HOST }}
           username: ec2-user
