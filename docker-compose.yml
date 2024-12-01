@@ -20,6 +20,7 @@ services:
     container_name: backend
     environment:
       - DB_URL=db
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     depends_on:
       - db
     restart: always
