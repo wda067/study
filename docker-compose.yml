@@ -3,13 +3,13 @@ services:
     image: ${DOCKERHUB_USERNAME}/study-mysql
     pull_policy: always
     container_name: mysql-db
-    ports:
-      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=mydb
       - MYSQL_USER=myuser
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
     restart: always
@@ -29,8 +29,12 @@ services:
     image: ${DOCKERHUB_USERNAME}/study-nginx
     pull_policy: always
     container_name: nginx
+    volumes:
+      - /etc/letsencrypt/live/airira.click/fullchain.pem:/etc/nginx/ssl/fullchain.pem
+      - /etc/letsencrypt/live/airira.click/privkey.pem:/etc/nginx/ssl/privkey.pem
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - backend
     restart: always
