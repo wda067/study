@@ -5,6 +5,9 @@ import com.study.exception.EmailAlreadyExists;
 import com.study.exception.MemberNotFound;
 import com.study.repository.MemberRepository;
 import com.study.request.JoinRequest;
+import com.study.response.MemberInfo;
+import java.util.List;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,5 +40,18 @@ public class MemberService {
                 .orElseThrow(MemberNotFound::new);
 
         memberRepository.delete(member);
+    }
+
+    public MemberInfo getMember(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFound::new);
+
+        return new MemberInfo(member);
+    }
+
+    public List<MemberInfo> getMembers() {
+        return memberRepository.findAll().stream()
+                .map(MemberInfo::new)
+                .toList();
     }
 }
