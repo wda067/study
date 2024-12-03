@@ -55,6 +55,7 @@ public class PaymentService {
                 .toList();
     }
 
+    @SuppressWarnings("unchecked")
     public JSONObject sendRequest(JSONObject requestData) throws IOException {
         HttpURLConnection connection = createConnection();
         try (OutputStream os = connection.getOutputStream()) {
