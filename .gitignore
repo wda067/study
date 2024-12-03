@@ -73,3 +73,8 @@ secrets.yml
 node_modules
 
 /http/
+/docker-compose-local.yml
+/nginx/
+/src/main/resources/application.yml
+/src/main/package.json
+/src/main/package-lock.json

@@ -2,8 +2,8 @@ name: Backend Build and Push
 
 on:
   push:
-#    branches:
-#      - 'feature/**'
+    branches:
+      - 'feature/**'
     paths:
       - 'src/**'
 
