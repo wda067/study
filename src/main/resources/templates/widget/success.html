@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <link rel="icon" href="https://static.toss.im/icons/png/4x/icon-toss-logo.png"/>
@@ -586,21 +586,21 @@
 
     <div class="p-grid typography--p" style="margin-top: 50px">
         <div class="p-grid-col text--left"><b>결제금액</b></div>
-        <div class="p-grid-col text--right" id="amount"></div>
+        <div class="p-grid-col text--right" id="amount" th:text="${amount} + '원'"></div>
     </div>
     <div class="p-grid typography--p" style="margin-top: 10px">
         <div class="p-grid-col text--left"><b>주문번호</b></div>
-        <div class="p-grid-col text--right" id="orderId"></div>
+        <div class="p-grid-col text--right" id="orderId" th:text="${orderId}"></div>
     </div>
     <div class="p-grid typography--p" style="margin-top: 10px">
         <div class="p-grid-col text--left"><b>paymentKey</b></div>
-        <div class="p-grid-col text--right" id="paymentKey" style="white-space: initial; width: 250px"></div>
+        <div class="p-grid-col text--right" id="paymentKey" th:text="${paymentKey}" style="white-space: initial; width: 250px"></div>
     </div>
     <div class="p-grid" style="margin-top: 30px">
         <button class="button p-grid-col5"
                 onclick="location.href='https://docs.tosspayments.com/guides/v2/payment-widget/integration';">연동 문서
         </button>
-        <button class="button p-grid-col5" onclick="window.location.href='/api/payment/widget';"
+        <button class="button p-grid-col5" onclick="window.location.href='/payment/widget';"
                 style="background-color: #e8f3ff; color: #1b64da">초기 화면
         </button>
     </div>
@@ -624,7 +624,7 @@
             amount: urlParams.get("amount"),
         };
 
-        const response = await fetch("/api/payment/confirm/widget", {
+        const response = await fetch("/payment/confirm/widget", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -633,7 +633,6 @@
         });
 
         const json = await response.json();
-
         if (json.code === "ALREADY_PROCESSED_PAYMENT") {
             window.location.href = 'checkout.html';
         }
@@ -652,7 +651,7 @@
         })
         .catch((err) => {
             // TODO: 결제 승인에 실패했을 경우 UI 처리 로직을 구현하세요.
-            window.location.href = `/fail.html?message=${err.message}&code=${err.code}`;
+            window.location.href = `/payment/fail?message=${err.message}&code=${err.code}`;
         });
 
     const paymentKeyElement = document.getElementById("paymentKey");

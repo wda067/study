@@ -2,9 +2,9 @@ package com.study.controller;
 
 import com.study.response.PaymentResponse;
 import com.study.service.PaymentService;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,10 +12,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -35,14 +37,29 @@ public class PaymentController {
     }
 
     @GetMapping("/api/payment/widget")
-    public String index() {
+    public String widget() {
         return "widget/checkout";
     }
 
+    @GetMapping("/api/payment/success")
+    public String success(@RequestParam String paymentKey,
+                          @RequestParam String orderId,
+                          @RequestParam String paymentType,
+                          @RequestParam Integer amount,
+                          Model model) {
+        model.addAttribute("paymentKey", paymentKey);
+        model.addAttribute("orderId", orderId);
+        model.addAttribute("paymentType", paymentType);
+        model.addAttribute("amount", amount);
+        return "widget/success";
+    }
+
     @GetMapping("/api/payment/fail")
-    public String failPayment(HttpServletRequest request, Model model) {
-        model.addAttribute("code", request.getParameter("code"));
-        model.addAttribute("message", request.getParameter("message"));
+    public String failPayment(@RequestParam String code,
+                              @RequestParam String message,
+                              Model model) {
+        model.addAttribute("code", code);
+        model.addAttribute("message", message);
         return "fail";
     }
 
