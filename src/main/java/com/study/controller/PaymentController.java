@@ -36,14 +36,14 @@ public class PaymentController {
 
     @GetMapping("/api/payment/widget")
     public String index() {
-        return "/widget/checkout";
+        return "widget/checkout";
     }
 
     @GetMapping("/api/payment/fail")
     public String failPayment(HttpServletRequest request, Model model) {
         model.addAttribute("code", request.getParameter("code"));
         model.addAttribute("message", request.getParameter("message"));
-        return "/fail";
+        return "fail";
     }
 
     @ResponseBody
