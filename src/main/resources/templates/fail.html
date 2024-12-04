@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="kr">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <link rel="icon" href="https://static.toss.im/icons/png/4x/icon-toss-logo.png"/>
@@ -586,17 +586,17 @@
 
     <div class="p-grid typography--p" style="margin-top: 50px">
         <div class="p-grid-col text--left"><b>에러메시지</b></div>
-        <div class="p-grid-col text--right" id="message"></div>
+        <div class="p-grid-col text--right" id="message" th:text="${message}"></div>
     </div>
     <div class="p-grid typography--p" style="margin-top: 10px">
         <div class="p-grid-col text--left"><b>에러코드</b></div>
-        <div class="p-grid-col text--right" id="code"></div>
+        <div class="p-grid-col text--right" id="code" th:text="${code}"></div>
     </div>
     <div class="p-grid">
         <button class="button p-grid-col5"
                 onclick="location.href='https://docs.tosspayments.com/guides/v2/payment-widget/integration';">연동 문서
         </button>
-        <button class="button p-grid-col5" onclick="window.location.href='/api/payment/widget';"
+        <button class="button p-grid-col5" onclick="window.location.href='/payment/widget';"
                 style="background-color: #e8f3ff; color: #1b64da">초기 화면
         </button>
     </div>
