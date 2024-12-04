@@ -1,7 +1,11 @@
 spring:
-  thymeleaf:
-    prefix: classpath:/templates/
-    suffix: .html
+#  thymeleaf:
+#    prefix: classpath:/templates/
+#    suffix: .html
+  mvc:
+    view:
+      prefix: classpath:/templates/
+      suffix: .html
 
 toss-payments:
   widget-secret: test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6

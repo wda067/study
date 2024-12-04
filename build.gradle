@@ -30,6 +30,7 @@ dependencies {
     implementation 'org.springframework.security:spring-security-crypto'
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework:spring-webmvc'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
