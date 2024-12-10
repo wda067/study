@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <!-- %d{}: 로그 발생 시각, %thread: 로그가 실행된 스레드 이름, %level: 로그 레벨, %logger{}: 로그를 출력한 클래스 이름 -->
+    <property name="CONSOLE_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{httpMethod}] %magenta([%thread]) %highlight([%-3level]) %logger{5} - %msg %n"/>
+
+    <!-- Console appender(로그를 콘솔에 출력) 설정 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>${CONSOLE_PATTERN}</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- name: 로거 이름, level: 로깅 레벨, additivity: 부모 로거에 로그를 전달할 지 여부 -->
+    <logger name="jdbc" level="OFF" additivity="false">
+        <!-- <appender-ref>: 이 로거에서 사용할 appender를 참조. -->
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="jdbc.sqlonly" level="OFF" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="jdbc.sqltiming" level="OFF" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.springframework.web" level="OFF" additivity="false">
+    <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="com.study.controller" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="com.study.service" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="com.study.domain" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <!-- 모든 로거의 최상위 부모 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
