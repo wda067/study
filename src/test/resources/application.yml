@@ -4,3 +4,6 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+
+toss-payments:
+  widget-secret: test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6

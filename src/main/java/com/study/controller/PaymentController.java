@@ -1,11 +1,12 @@
 package com.study.controller;
 
+import static java.lang.Integer.parseInt;
+
 import com.study.response.PaymentResponse;
 import com.study.service.PaymentService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,17 +24,18 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     /**
-     * 결제 승인 API 호출
+     * 결제 승인 API 요청을 처리하여 HTTP 응답을 반환합니다.
+     *
+     * @param jsonBody 결제 요청 데이터가 포함된 JSON 문자열
+     * @return 결제 요청의 결과를 나타내는 {@link PaymentResponse}
      */
     @PostMapping("/api/payment/confirm/widget")
-    public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody) throws Exception {
-        JSONObject requestData = paymentService.parseRequestData(jsonBody);
-        JSONObject response = paymentService.sendRequest(requestData);
-        int statusCode = response.containsKey("error") ? 400 : 200;
-        if (statusCode == 200) {
-            paymentService.save(response);
+    public ResponseEntity<PaymentResponse> confirmPayment(@RequestBody String jsonBody) {
+        PaymentResponse response = paymentService.confirmPayment(jsonBody);
+        if (response.getCode() == null) {
+            return ResponseEntity.ok().body(response);
         }
-        return ResponseEntity.status(statusCode).body(response);
+        return ResponseEntity.badRequest().body(response);
     }
 
     @GetMapping("/api/payment/widget")

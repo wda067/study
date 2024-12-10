@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.study.config.TestSecurityConfig;
 import com.study.domain.Member;
 import com.study.exception.EmailAlreadyExists;
-import com.study.exception.MemberNotFound;
 import com.study.repository.MemberRepository;
 import com.study.request.JoinRequest;
 import org.junit.jupiter.api.BeforeEach;
