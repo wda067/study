@@ -4,49 +4,44 @@ import static com.study.domain.PaymentStatus.valueOf;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.OffsetDateTime.parse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.study.client.TossPaymentsClient;
 import com.study.domain.Payment;
 import com.study.repository.PaymentRepository;
+import com.study.request.PaymentRequest;
 import com.study.response.PaymentResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import feign.FeignException;
 import java.util.Base64;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
 
-    private static final String PAYMENT_CONFIRM_API = "https://api.tosspayments.com/v1/payments/confirm";
-
     private final PaymentRepository paymentRepository;
+    private final TossPaymentsClient tossPaymentsClient;
+    private final ObjectMapper objectMapper;
+
     @Value("${toss-payments.widget-secret}")
-    private String WIDGET_SECRET_KEY;
+    private String widgetSecretKey;
 
-    public void save(JSONObject response) {
-        Payment payment = Payment.builder()
-                .paymentKey(response.get("paymentKey").toString())
-                .orderId(response.get("orderId").toString())
-                .orderName(response.get("orderName").toString())
-                .method(response.get("method").toString())
-                .totalAmount((Long) response.get("totalAmount"))
-                .status(valueOf(response.get("status").toString()))
-                .requestedAt(parse(response.get("requestedAt").toString()).toLocalDateTime())
-                .build();
-
-        paymentRepository.save(payment);
+    public PaymentResponse confirmPayment(String jsonBody) {
+        try {
+            PaymentResponse response = sendRequest(jsonBody);
+            paymentRepository.save(mapToPayment(response));
+            return response;
+        } catch (FeignException e) {
+            try {
+                return objectMapper.readValue(e.contentUTF8(), PaymentResponse.class);
+            } catch (JsonProcessingException jsonProcessingException) {
+                return new PaymentResponse("UNKNOWN_ERROR", "알 수 없는 오류가 발생했습니다.");
+            }
+        }
     }
 
     public List<PaymentResponse> findAll() {
@@ -55,43 +50,32 @@ public class PaymentService {
                 .toList();
     }
 
-    @SuppressWarnings("unchecked")
-    public JSONObject sendRequest(JSONObject requestData) throws IOException {
-        HttpURLConnection connection = createConnection();
-        try (OutputStream os = connection.getOutputStream()) {
-            os.write(requestData.toString().getBytes(UTF_8));
-        }
-
-        try (InputStream responseStream = connection.getResponseCode() == 200 ? connection.getInputStream()
-                : connection.getErrorStream();
-             Reader reader = new InputStreamReader(responseStream, UTF_8)) {
-            return (JSONObject) new JSONParser().parse(reader);
-        } catch (Exception e) {
-            log.error("Error reading response", e);
-            JSONObject errorResponse = new JSONObject();
-            errorResponse.put("error", "Error reading response");
-            return errorResponse;
-        }
-    }
-
-    public JSONObject parseRequestData(String jsonBody) {
+    /**
+     * JSON 문자열을 PaymentRequest 객체로 변환하고, 토스 결제 승인 API를 호출합니다.
+     *
+     * @param jsonBody
+     * @return
+     */
+    private PaymentResponse sendRequest(String jsonBody) {
+        String authorizationHeader =
+                "Basic " + Base64.getEncoder().encodeToString((widgetSecretKey + ":").getBytes(UTF_8));
         try {
-            return (JSONObject) new JSONParser().parse(jsonBody);
-        } catch (ParseException e) {
-            log.error("JSON Parsing Error", e);
-            return new JSONObject();
+            PaymentRequest request = objectMapper.readValue(jsonBody, PaymentRequest.class);
+            return tossPaymentsClient.confirmPayment(authorizationHeader, request);
+        } catch (JsonProcessingException e) {
+            return new PaymentResponse("UNKNOWN_ERROR", "알 수 없는 오류가 발생했습니다.");
         }
     }
 
-    private HttpURLConnection createConnection() throws IOException {
-        URL url = new URL(PAYMENT_CONFIRM_API);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestProperty("Authorization",
-                "Basic " + Base64.getEncoder()
-                        .encodeToString((WIDGET_SECRET_KEY + ":").getBytes(UTF_8)));
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-        return connection;
+    private Payment mapToPayment(PaymentResponse response) {
+        return Payment.builder()
+                .paymentKey(response.getPaymentKey())
+                .orderId(response.getOrderId())
+                .orderName(response.getOrderName())
+                .method(response.getMethod())
+                .totalAmount(response.getTotalAmount())
+                .status(valueOf(response.getStatus()))
+                .requestedAt(parse(response.getRequestedAt()).toLocalDateTime())
+                .build();
     }
 }
