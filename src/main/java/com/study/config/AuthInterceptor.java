@@ -4,7 +4,8 @@ import com.study.exception.Unauthorized;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -13,8 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
  * HTTP 요청 -> WAS -> 필터 -> 서블릿 -> 스프링 인터셉터 -> 컨트롤러
  * 적절하지 않은 요청이라고 판단하면 컨트롤러 호출 전에 요청을 중단할 수 있다.
  */
-@Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
+
+    Logger log = LoggerFactory.getLogger(AuthInterceptor.class);
 
     /**
      * preHandle : 컨트롤러 호출 전에 호출된다. (더 정확히는 핸들러 어댑터 호출 전에 호출된다.)
