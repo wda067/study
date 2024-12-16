@@ -41,7 +41,7 @@ public class MemberController {
         return memberService.getMembers();
     }
 
-    @GetMapping("/test-log")
+    @GetMapping("/api/test-log")
     public void testLog() {
         log.info("This is an INFO log in production!");
         log.error("This is an ERROR log in production!");
