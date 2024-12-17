@@ -9,7 +9,7 @@
     <!-- %logger{}: 로거 이름 -->
     <!-- %msg: 로그 메시지 -->
     <property name="LOG_PATTERN"
-    value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{httpMethod}] %magenta([%thread]) %highlight([%-3level]) %logger{5} - %msg %n"/>
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{httpMethod}] %magenta([%thread]) %highlight([%-3level]) %logger{5} - %msg %n"/>
 
     <!-- 로그 파일 경로 설정-->
     <property name="LOG_PATH" value="/home/ec2-user/log"/>
@@ -49,7 +49,7 @@
         <logger name="com.study.service" level="DEBUG" additivity="false">
             <appender-ref ref="STDOUT"/>
         </logger>
-        <logger name="org.springframework.web" level="DEBUG" additivity="false">
+        <logger name="org.springframework.web" level="INFO" additivity="false">
             <appender-ref ref="STDOUT"/>
         </logger>
     </springProfile>
