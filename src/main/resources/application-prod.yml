@@ -8,3 +8,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+server:
+  tomcat:
+    threads:
+      min-spare: 20
+
