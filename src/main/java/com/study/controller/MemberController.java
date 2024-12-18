@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberController {
 
+    private static final Logger log = LoggerFactory.getLogger(MemberController.class);
     private final MemberService memberService;
 
     @PostMapping("/api/join")
@@ -37,6 +38,7 @@ public class MemberController {
 
     @GetMapping("/api/members")
     public List<MemberInfo> getMembers() {
+        log.info("getMembers");
         return memberService.getMembers();
     }
 }
