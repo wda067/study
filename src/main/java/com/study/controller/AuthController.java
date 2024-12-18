@@ -23,7 +23,7 @@ public class AuthController {
         Member member = authService.login(loginRequest);
 
         HttpSession session = request.getSession();
-        session.setAttribute("member", member);
+        session.setAttribute("memberId", member.getId());
         return ResponseEntity.ok().build();
     }
 

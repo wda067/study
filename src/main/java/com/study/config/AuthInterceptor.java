@@ -27,9 +27,11 @@ public class AuthInterceptor implements HandlerInterceptor {
             throws Exception {
         String requestURI = request.getRequestURI();
         log.info("인증 인터셉터 실행: {}", requestURI);
-        HttpSession session = request.getSession(false);
 
-        if (session == null || session.getAttribute("member") == null) {
+        //현재 요청에 연관된 세션이 존재하는 경우에만 세션을 반환
+        HttpSession session = request.getSession(false);
+        log.info("session: {}", session.getId());
+        if (session == null || session.getAttribute("memberId") == null) {
             log.info("미인증 사용자 요청");
             throw new Unauthorized();
         }
