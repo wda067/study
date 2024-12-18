@@ -78,3 +78,4 @@ node_modules
 /src/main/resources/application.yml
 /src/main/package.json
 /src/main/package-lock.json
+/src/main/java/com/study/MemberDataInitializer.java

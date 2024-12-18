@@ -1,6 +1,7 @@
 package com.study.response;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.study.domain.Payment;
@@ -8,6 +9,7 @@ import lombok.Getter;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)  //null인 필드는 JSON에서 제외
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PaymentResponse {
 
     private final String paymentKey;
@@ -23,6 +25,24 @@ public class PaymentResponse {
     @JsonProperty("message")
     private String message;
 
+    @JsonCreator
+    public PaymentResponse(
+            @JsonProperty("paymentKey") String paymentKey,
+            @JsonProperty("orderId") String orderId,
+            @JsonProperty("orderName") String orderName,
+            @JsonProperty("method") String method,
+            @JsonProperty("totalAmount") Long totalAmount,
+            @JsonProperty("status") String status,
+            @JsonProperty("requestedAt") String requestedAt) {
+        this.paymentKey = paymentKey;
+        this.orderId = orderId;
+        this.orderName = orderName;
+        this.method = method;
+        this.totalAmount = totalAmount;
+        this.status = status;
+        this.requestedAt = requestedAt;
+    }
+
     public PaymentResponse(Payment payment) {
         this.paymentKey = payment.getPaymentKey();
         this.orderId = payment.getOrderId();
@@ -31,18 +51,6 @@ public class PaymentResponse {
         this.totalAmount = payment.getTotalAmount();
         this.status = payment.getStatus().name();
         this.requestedAt = String.valueOf(payment.getRequestedAt());
-    }
-
-    @JsonCreator
-    public PaymentResponse(String paymentKey, String orderId, String orderName, String method, Long totalAmount,
-                           String status, String requestedAt) {
-        this.paymentKey = paymentKey;
-        this.orderId = orderId;
-        this.orderName = orderName;
-        this.method = method;
-        this.totalAmount = totalAmount;
-        this.status = status;
-        this.requestedAt = requestedAt;
     }
 
     public PaymentResponse(String code, String message) {
