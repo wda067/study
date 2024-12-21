@@ -21,8 +21,11 @@ services:
     environment:
       - DB_URL=db
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     depends_on:
       - db
+      - redis
     restart: always
 
   nginx:
@@ -37,6 +40,19 @@ services:
       - "443:443"
     depends_on:
       - backend
+    restart: always
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command:
+      - /bin/sh
+      - -c
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+    ports:
+      - "6379:6379"
     restart: always
 
 volumes:
