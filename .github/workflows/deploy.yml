@@ -39,6 +39,7 @@ jobs:
           script: |
             export MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
             export MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+            export REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
             export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
             
             docker-compose down
